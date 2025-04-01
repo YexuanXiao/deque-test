@@ -1,0 +1,41 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(deque)
+
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+enable_testing()
+
+include_directories(deque)
+include_directories(support)
+
+function(number_to_padded_string NUM TARGET_LENGTH OUTPUT_VAR)
+    string(REPEAT "0" ${TARGET_LENGTH} LEADING_ZEROS)
+    string(LENGTH "${NUM}" CURRENT_LENGTH)
+    math(EXPR PAD_LENGTH "${TARGET_LENGTH} - ${CURRENT_LENGTH}")
+    
+    if(PAD_LENGTH GREATER 0)
+        string(SUBSTRING "${LEADING_ZEROS}" 0 ${PAD_LENGTH} PADDING)
+        set(${OUTPUT_VAR} "${PADDING}${NUM}" PARENT_SCOPE)
+    else()
+        set(${OUTPUT_VAR} "${NUM}" PARENT_SCOPE)
+    endif()
+endfunction()
+
+file(GLOB_RECURSE cpp_sources CONFIGURE_DEPENDS std/containers/sequences/deque/*.cpp)
+set(COUNTER 0)
+foreach(source_file IN LISTS cpp_sources)
+    get_filename_component(target_ext ${source_file} EXT)
+    if(NOT target_ext STREQUAL ".verify.cpp")
+        get_filename_component(target_name_wle ${source_file} NAME_WLE)
+        file(RELATIVE_PATH target_directory ${CMAKE_CURRENT_SOURCE_DIR}/std/containers/sequences/deque ${source_file})
+        string(REPLACE "/" "_" converted_path ${target_directory})
+        number_to_padded_string(${COUNTER} 2 counter_pad)
+        set(target_name "${counter_pad}.${converted_path}${target_name_wle}")
+        add_executable(${target_name} ${source_file})
+        add_test(NAME ${target_name} COMMAND ${target_name})
+        math(EXPR COUNTER "${COUNTER} + 1")
+    endif()
+endforeach()
