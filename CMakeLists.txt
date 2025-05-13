@@ -32,7 +32,7 @@ set(counter 0)
 foreach(source_file IN LISTS cpp_sources)
     get_filename_component(target_ext ${source_file} EXT)
     get_filename_component(file_name ${source_file} NAME)
-    if((NOT file_name STREQUAL "types.pass.cpp") AND (NOT counter EQUAL 27) AND (NOT counter EQUAL 30)) #27 30
+    if((NOT file_name STREQUAL "types.pass.cpp") AND (NOT file_name STREQUAL "move.pass.cpp") AND (NOT file_name STREQUAL "move_assign.pass.cpp")) #excessive
         get_filename_component(target_name_wle ${source_file} NAME_WLE)
         file(RELATIVE_PATH target_directory ${CMAKE_CURRENT_SOURCE_DIR}/std/containers/sequences/deque ${source_file})
         string(REPLACE "/" "_" converted_path ${target_directory})
