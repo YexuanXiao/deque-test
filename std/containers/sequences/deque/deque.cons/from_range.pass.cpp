@@ -10,14 +10,15 @@
 // UNSUPPORTED: GCC-ALWAYS_INLINE-FIXME
 
 #include "deque.hpp"
-
+#if TEST_STD_VER>=23
 #include "../../from_range_sequence_containers.h"
 #include "test_macros.h"
-
+#endif
 // template<container-compatible-range<T> R>
 //   deque(from_range_t, R&& rg, const Allocator& = Allocator()); // C++23
 
 int main(int, char**) {
+#if TEST_STD_VER>=23
   for_all_iterators_and_allocators<int>([]<class Iter, class Sent, class Alloc>() {
     test_sequence_container<bizwen::deque, int, Iter, Sent, Alloc>([]([[maybe_unused]] const auto& c) {
       LIBCPP_ASSERT(c.__invariants());
@@ -33,4 +34,5 @@ int main(int, char**) {
   //test_exception_safety_throwing_allocator<bizwen::deque, int>();
 
   return 0;
+#endif
 }
