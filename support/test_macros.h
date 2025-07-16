@@ -255,7 +255,7 @@
 #define LIBCPP_STATIC_ASSERT(...) static_assert(__VA_ARGS__)
 #define LIBCPP_ASSERT_NOEXCEPT(...) ASSERT_NOEXCEPT(__VA_ARGS__)
 #define LIBCPP_ASSERT_NOT_NOEXCEPT(...) ASSERT_NOT_NOEXCEPT(__VA_ARGS__)
-#define LIBCPP_ONLY(...) __VA_ARGS__
+#define LIBCPP_ONLY(...) static_assert(true, "")
 #else
 #define LIBCPP_ASSERT(...) static_assert(true, "")
 #define LIBCPP_STATIC_ASSERT(...) static_assert(true, "")

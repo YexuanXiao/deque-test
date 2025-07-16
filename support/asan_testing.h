@@ -48,9 +48,9 @@ TEST_CONSTEXPR bool is_double_ended_contiguous_container_asan_correct(const std:
   return true;
 }
 #else
-#  include <deque>
+#  include "deque.hpp"
 template <class T, class Alloc>
-TEST_CONSTEXPR bool is_double_ended_contiguous_container_asan_correct(const std::deque<T, Alloc>&) {
+TEST_CONSTEXPR bool is_double_ended_contiguous_container_asan_correct(const bizwen::deque<T, Alloc>&) {
   return true;
 }
 #endif
