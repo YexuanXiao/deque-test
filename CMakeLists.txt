@@ -10,6 +10,7 @@ enable_testing()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     add_compile_options(/utf-8)
+    add_compile_options(/WX)
 endif()
 
 include_directories(deque)
@@ -51,3 +52,5 @@ foreach(source_file IN LISTS cpp_sources)
     endif()
     math(EXPR counter "${counter} + 1")
 endforeach()
+
+add_subdirectory(deque)
