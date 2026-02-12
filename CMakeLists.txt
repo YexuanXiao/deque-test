@@ -11,6 +11,8 @@ enable_testing()
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     add_compile_options(/utf-8)
     add_compile_options(/WX)
+else()
+    add_compile_options(-Werror)
 endif()
 
 include_directories(deque)
@@ -53,4 +55,49 @@ foreach(source_file IN LISTS cpp_sources)
     math(EXPR counter "${counter} + 1")
 endforeach()
 
-add_subdirectory(deque)
+include(CheckCXXSourceCompiles)
+
+set(CPP_STDLIB "unknown")
+
+check_cxx_source_compiles("
+#include <cstddef>
+#ifdef __GLIBCXX__
+int main() { return 0; }
+#else
+#error Not libstdc++
+#endif
+" USING_LIBSTDCXX)
+
+if(USING_LIBSTDCXX)
+    set(STDLIB "libstdc++")
+endif()
+
+check_cxx_source_compiles("
+#include <cstddef>
+#ifdef _LIBCPP_VERSION
+int main() { return 0; }
+#else
+#error Not libc++
+#endif
+" USING_LIBCXX)
+
+if(USING_LIBCXX)
+    set(STDLIB "libc++")
+endif()
+
+check_cxx_source_compiles("
+#include <cstddef>
+#ifdef _MSVC_STL_UPDATE
+int main() { return 0; }
+#else
+#error Not MSVC STL
+#endif
+" USING_MSVC_STL)
+
+if(USING_MSVC_STL)
+    set(STDLIB "STL")
+endif()
+
+if (NOT STDLIB STREQUAL "libc++")
+    add_subdirectory(deque)
+endif()
